@@ -1,0 +1,28 @@
+[
+  {
+    "id": "1",
+    "name": "BMW M3",
+    "year": 2019,
+    "price": "R$ 249.900",
+    "km": "62.000 km",
+    "transmission": "Manual",
+    "fuel": "Gasolina",
+    "power": "431 cv",
+    "description": "BMW M3 em excelente estado de conservação. Motor S55 3.0 biturbo, 431cv. Revisões em dia, laudo aprovado.",
+    "badge": "Destaque",
+    "images": ["/cars/1.jpg", "/cars/3.jpg", "/cars/5.jpg"]
+  },
+  {
+    "id": "2",
+    "name": "BMW M3",
+    "year": 2019,
+    "price": "R$ 249.900",
+    "km": "62.000 km",
+    "transmission": "Manual",
+    "fuel": "Gasolina",
+    "power": "431 cv",
+    "description": "BMW M3 perfeito para quem busca desempenho e estilo. Documento em dia, sem multas.",
+    "badge": null,
+    "images": ["/cars/7.jpg", "/cars/9.jpg"]
+  }
+]

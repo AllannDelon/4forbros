@@ -1,0 +1,88 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #0D1117;
+  --surface: #1A1F26;
+  --primary: #0077FF;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--background);
+  color: #dfe2eb;
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Glassmorphism card */
+.glass-card {
+  background: rgba(26, 31, 38, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-top-color: rgba(255, 255, 255, 0.10);
+  border-left-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Glow on hover */
+.glow-hover {
+  transition: box-shadow 0.3s ease;
+}
+.glow-hover:hover {
+  box-shadow: 0 0 20px rgba(0, 119, 255, 0.25);
+}
+
+/* Primary button glow */
+.btn-primary {
+  background: #0077FF;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+.btn-primary:hover {
+  background: #0066dd;
+  box-shadow: 0 0 20px rgba(0, 119, 255, 0.4);
+}
+
+/* Ghost button */
+.btn-ghost {
+  background: transparent;
+  color: #aec6ff;
+  border: 1px solid #0077FF;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(8px);
+}
+.btn-ghost:hover {
+  background: rgba(0, 119, 255, 0.1);
+  box-shadow: 0 0 15px rgba(0, 119, 255, 0.2);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #0D1117; }
+::-webkit-scrollbar-thumb { background: #2A3038; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #0077FF; }
+
+/* Blue line separator */
+.blue-line {
+  display: inline-block;
+  width: 48px;
+  height: 3px;
+  background: #0077FF;
+  border-radius: 2px;
+  box-shadow: 0 0 8px rgba(0, 119, 255, 0.6);
+}
