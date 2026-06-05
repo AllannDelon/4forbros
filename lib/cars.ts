@@ -13,6 +13,7 @@ export type Car = {
   description: string;
   badge: string | null;
   images: string[];
+  instagramUrl?: string;
 };
 
 const DATA_FILE = path.join(process.cwd(), "data", "cars.json");

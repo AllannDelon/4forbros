@@ -1,12 +1,42 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
+import type { Car } from "@/lib/cars";
+
+function parsePrice(price: string): number {
+  return parseInt(price.replace(/\D/g, "")) || 0;
+}
 
 export default function Hero() {
-  const [marca, setMarca] = useState("");
-  const [tipo, setTipo] = useState("");
+  const [cars, setCars] = useState<Car[]>([]);
+  const [fuel, setFuel] = useState("");
+  const [transmission, setTransmission] = useState("");
   const [precoMin, setPrecoMin] = useState("");
   const [precoMax, setPrecoMax] = useState("");
+
+  useEffect(() => {
+    fetch("/api/cars")
+      .then((r) => r.json())
+      .then(setCars)
+      .catch(() => {});
+  }, []);
+
+  const fuels = [...new Set(cars.map((c) => c.fuel).filter(Boolean))];
+  const transmissions = [...new Set(cars.map((c) => c.transmission).filter(Boolean))];
+
+  const handleSearch = () => {
+    window.dispatchEvent(
+      new CustomEvent("filterCars", {
+        detail: { fuel, transmission, precoMin, precoMax },
+      })
+    );
+    document.getElementById("veiculos")?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const handleViewAll = () => {
+    window.dispatchEvent(new CustomEvent("filterCars", { detail: {} }));
+    document.getElementById("veiculos")?.scrollIntoView({ behavior: "smooth" });
+  };
 
   return (
     <section id="inicio" className="relative min-h-screen flex items-center overflow-hidden">
@@ -21,7 +51,6 @@ export default function Hero() {
         />
         <div className="absolute inset-0 bg-gradient-to-r from-[#0D1117] via-[#0D1117]/70 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0D1117] via-transparent to-transparent" />
-        {/* Blue glow */}
         <div className="absolute top-1/3 left-1/4 w-96 h-96 rounded-full bg-[#0077FF]/10 blur-3xl" />
       </div>
 
@@ -54,35 +83,39 @@ export default function Hero() {
           <div className="glass-card rounded-xl p-4 md:p-5 mb-8">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
               <div className="flex flex-col gap-1">
-                <label className="text-xs font-semibold uppercase tracking-wider text-[#8b90a1]">Tipo</label>
+                <label className="text-xs font-semibold uppercase tracking-wider text-[#8b90a1]">
+                  Combustível
+                </label>
                 <select
-                  value={tipo}
-                  onChange={(e) => setTipo(e.target.value)}
+                  value={fuel}
+                  onChange={(e) => setFuel(e.target.value)}
                   className="bg-[#2A3038] text-[#dfe2eb] text-sm rounded-lg px-3 py-2.5 border border-white/5 focus:border-[#0077FF] focus:outline-none focus:shadow-[0_0_0_2px_rgba(0,119,255,0.2)] transition-all"
                 >
-                  <option value="">Todos os tipos</option>
-                  <option value="sedan">Sedan</option>
-                  <option value="suv">SUV</option>
-                  <option value="coupe">Coupé</option>
-                  <option value="esportivo">Esportivo</option>
+                  <option value="">Todos</option>
+                  {fuels.map((f) => (
+                    <option key={f} value={f}>{f}</option>
+                  ))}
                 </select>
               </div>
               <div className="flex flex-col gap-1">
-                <label className="text-xs font-semibold uppercase tracking-wider text-[#8b90a1]">Marca</label>
+                <label className="text-xs font-semibold uppercase tracking-wider text-[#8b90a1]">
+                  Câmbio
+                </label>
                 <select
-                  value={marca}
-                  onChange={(e) => setMarca(e.target.value)}
+                  value={transmission}
+                  onChange={(e) => setTransmission(e.target.value)}
                   className="bg-[#2A3038] text-[#dfe2eb] text-sm rounded-lg px-3 py-2.5 border border-white/5 focus:border-[#0077FF] focus:outline-none focus:shadow-[0_0_0_2px_rgba(0,119,255,0.2)] transition-all"
                 >
-                  <option value="">Todas as marcas</option>
-                  <option value="bmw">BMW</option>
-                  <option value="mercedes">Mercedes</option>
-                  <option value="porsche">Porsche</option>
-                  <option value="audi">Audi</option>
+                  <option value="">Todos</option>
+                  {transmissions.map((t) => (
+                    <option key={t} value={t}>{t}</option>
+                  ))}
                 </select>
               </div>
               <div className="flex flex-col gap-1">
-                <label className="text-xs font-semibold uppercase tracking-wider text-[#8b90a1]">A partir de</label>
+                <label className="text-xs font-semibold uppercase tracking-wider text-[#8b90a1]">
+                  A partir de
+                </label>
                 <select
                   value={precoMin}
                   onChange={(e) => setPrecoMin(e.target.value)}
@@ -92,10 +125,13 @@ export default function Hero() {
                   <option value="50000">R$ 50.000</option>
                   <option value="100000">R$ 100.000</option>
                   <option value="200000">R$ 200.000</option>
+                  <option value="500000">R$ 500.000</option>
                 </select>
               </div>
               <div className="flex flex-col gap-1">
-                <label className="text-xs font-semibold uppercase tracking-wider text-[#8b90a1]">Até</label>
+                <label className="text-xs font-semibold uppercase tracking-wider text-[#8b90a1]">
+                  Até
+                </label>
                 <select
                   value={precoMax}
                   onChange={(e) => setPrecoMax(e.target.value)}
@@ -105,17 +141,21 @@ export default function Hero() {
                   <option value="100000">R$ 100.000</option>
                   <option value="300000">R$ 300.000</option>
                   <option value="500000">R$ 500.000</option>
+                  <option value="1000000">R$ 1.000.000</option>
                 </select>
               </div>
             </div>
             <div className="flex gap-3">
-              <button className="flex-1 btn-primary py-3 rounded-lg text-sm flex items-center justify-center gap-2">
+              <button
+                onClick={handleSearch}
+                className="flex-1 btn-primary py-3 rounded-lg text-sm flex items-center justify-center gap-2"
+              >
                 <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" strokeLinecap="round" />
                 </svg>
                 Buscar Veículos
               </button>
-              <button className="btn-ghost px-5 py-3 rounded-lg text-sm">
+              <button onClick={handleViewAll} className="btn-ghost px-5 py-3 rounded-lg text-sm">
                 Ver todos
               </button>
             </div>
@@ -123,12 +163,20 @@ export default function Hero() {
 
           {/* Stats */}
           <div className="flex gap-8">
-            {[["500+", "Veículos"], ["98%", "Satisfação"], ["15+", "Anos no mercado"]].map(([n, l]) => (
-              <div key={l}>
-                <p className="font-rajdhani font-bold text-2xl text-white">{n}</p>
-                <p className="text-xs text-[#8b90a1] font-inter">{l}</p>
-              </div>
-            ))}
+            <div>
+              <p className="font-rajdhani font-bold text-2xl text-white">
+                {cars.length > 0 ? `${cars.length}` : "—"}
+              </p>
+              <p className="text-xs text-[#8b90a1] font-inter">Disponíveis</p>
+            </div>
+            <div>
+              <p className="font-rajdhani font-bold text-2xl text-white">500+</p>
+              <p className="text-xs text-[#8b90a1] font-inter">Vendidos</p>
+            </div>
+            <div>
+              <p className="font-rajdhani font-bold text-2xl text-white">4+</p>
+              <p className="text-xs text-[#8b90a1] font-inter">Anos no mercado</p>
+            </div>
           </div>
         </div>
       </div>

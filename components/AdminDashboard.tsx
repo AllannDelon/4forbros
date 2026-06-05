@@ -15,6 +15,7 @@ const EMPTY_CAR = (): Omit<Car, "id"> => ({
   description: "",
   badge: null,
   images: [],
+  instagramUrl: "",
 });
 
 export default function AdminDashboard({ initialCars }: { initialCars: Car[] }) {
@@ -332,6 +333,14 @@ export default function AdminDashboard({ initialCars }: { initialCars: Car[] }) 
                   className="bg-[#2A3038] text-[#dfe2eb] text-sm rounded-lg px-4 py-3 border border-white/5 focus:border-[#0077FF] focus:outline-none focus:shadow-[0_0_0_2px_rgba(0,119,255,0.2)] transition-all placeholder:text-[#414755] resize-none"
                 />
               </div>
+
+              {/* Instagram URL */}
+              <Field
+                label="Link do Instagram (opcional)"
+                value={form.instagramUrl || ""}
+                onChange={(v) => setForm((f) => ({ ...f, instagramUrl: v }))}
+                placeholder="https://www.instagram.com/p/..."
+              />
 
               {/* Images */}
               <div className="flex flex-col gap-2">
