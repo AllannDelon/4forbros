@@ -21,8 +21,8 @@ export default function Hero() {
       .catch(() => {});
   }, []);
 
-  const fuels = [...new Set(cars.map((c) => c.fuel).filter(Boolean))];
-  const transmissions = [...new Set(cars.map((c) => c.transmission).filter(Boolean))];
+  const fuels = Array.from(new Set(cars.map((c) => c.fuel).filter(Boolean)));
+  const transmissions = Array.from(new Set(cars.map((c) => c.transmission).filter(Boolean)));
 
   const handleSearch = () => {
     window.dispatchEvent(
