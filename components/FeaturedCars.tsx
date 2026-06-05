@@ -68,15 +68,19 @@ export default function FeaturedCars() {
               </p>
             )}
           </div>
-          <button
-            onClick={() => setFilters({})}
-            className={`hidden md:flex btn-ghost px-5 py-2.5 rounded-lg text-sm items-center gap-2 ${!hasFilters ? "opacity-50 cursor-default" : ""}`}
-          >
-            {hasFilters ? "Limpar filtros" : "Ver todos"}
-            <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </button>
+          <div className="hidden md:flex items-center gap-2">
+            {hasFilters && (
+              <button onClick={() => setFilters({})} className="btn-ghost px-4 py-2.5 rounded-lg text-sm">
+                Limpar filtros
+              </button>
+            )}
+            <Link href="/veiculos" className="flex btn-ghost px-5 py-2.5 rounded-lg text-sm items-center gap-2">
+              Ver todos
+              <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </Link>
+          </div>
         </div>
 
         {/* Loading skeleton */}
