@@ -25,7 +25,7 @@ export default function About() {
                 </svg>
               </div>
               <div>
-                <p className="font-rajdhani font-bold text-lg text-white">+15 Anos</p>
+                <p className="font-rajdhani font-bold text-lg text-white">+4 Anos</p>
                 <p className="text-xs text-[#8b90a1] font-inter">de experiência no mercado</p>
               </div>
             </div>
