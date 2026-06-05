@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { isAuthenticated } from "@/lib/auth";
-import { writeFile, mkdir } from "fs/promises";
-import path from "path";
-import { randomUUID } from "crypto";
+import { v2 as cloudinary } from "cloudinary";
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 export async function POST(req: NextRequest) {
   if (!isAuthenticated()) {
@@ -16,18 +20,23 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Nenhum arquivo enviado" }, { status: 400 });
   }
 
-  const uploadDir = path.join(process.cwd(), "public", "cars");
-  await mkdir(uploadDir, { recursive: true });
-
   const urls: string[] = [];
 
   for (const file of files) {
-    const ext = file.name.split(".").pop() || "jpg";
-    const filename = `${randomUUID()}.${ext}`;
-    const filePath = path.join(uploadDir, filename);
     const bytes = await file.arrayBuffer();
-    await writeFile(filePath, Buffer.from(bytes));
-    urls.push(`/cars/${filename}`);
+    const buffer = Buffer.from(bytes);
+
+    const result = await new Promise<string>((resolve, reject) => {
+      cloudinary.uploader.upload_stream(
+        { folder: "4forbros", resource_type: "image" },
+        (error, result) => {
+          if (error || !result) return reject(error);
+          resolve(result.secure_url);
+        }
+      ).end(buffer);
+    });
+
+    urls.push(result);
   }
 
   return NextResponse.json({ urls });
