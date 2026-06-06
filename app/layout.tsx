@@ -13,6 +13,12 @@ const rajdhani = Rajdhani({
   variable: "--font-rajdhani",
 });
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+};
+
 export const metadata: Metadata = {
   title: "4forBros | Encontre seu próximo veículo",
   description: "A melhor plataforma para comprar e vender veículos premium com confiança.",
@@ -23,9 +29,6 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="pt-BR" className={`${inter.variable} ${rajdhani.variable}`}>
-      <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-      </head>
       <body>{children}</body>
     </html>
   );
