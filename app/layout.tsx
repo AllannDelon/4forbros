@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { Viewport } from "next";
 import { Inter, Rajdhani } from "next/font/google";
 import "./globals.css";
 
@@ -13,6 +14,12 @@ const rajdhani = Rajdhani({
   variable: "--font-rajdhani",
 });
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+};
+
 export const metadata: Metadata = {
   title: "4forBros | Encontre seu próximo veículo",
   description: "A melhor plataforma para comprar e vender veículos premium com confiança.",
@@ -20,10 +27,4 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{ children: React.ReactNode }>) {
-  return (
-    <html lang="pt-BR" className={`${inter.variable} ${rajdhani.variable}`}>
-      <body>{children}</body>
-    </html>
-  );
-}
+}: Readonly<{ children: React.ReactNode }>
