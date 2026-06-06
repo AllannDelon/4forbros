@@ -86,4 +86,7 @@ body {
   display: inline-block;
   width: 48px;
   height: 3px;
-  backgroun
+  background: #0077FF;
+  border-radius: 2px;
+  box-shadow: 0 0 8px rgba(0, 119, 255, 0.6);
+}
