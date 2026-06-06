@@ -31,7 +31,7 @@ export default function CarPage({ params }: { params: { id: string } }) {
 
       <div className="max-w-7xl mx-auto px-6 lg:px-16 pt-28 pb-20">
         {/* Breadcrumb */}
-        <div className="flex items-center gap-2 text-sm text-[#8b90a1] font-inter mb-8">
+        <div className="flex items-center gap-2 text-sm text-[#8b90a1] font-inter mb-8 flex-wrap">
           <Link href="/" className="hover:text-white transition-colors">Início</Link>
           <span>/</span>
           <Link href="/#veiculos" className="hover:text-white transition-colors">Veículos</Link>
@@ -41,12 +41,12 @@ export default function CarPage({ params }: { params: { id: string } }) {
 
         <div className="grid lg:grid-cols-2 gap-10">
           {/* Gallery */}
-          <div>
+          <div className="min-w-0">
             <CarGallery images={car.images} name={car.name} />
           </div>
 
           {/* Details */}
-          <div className="flex flex-col">
+          <div className="flex flex-col min-w-0">
             {/* Badge */}
             {car.badge && (
               <span className="inline-block bg-[#0077FF] text-white text-xs font-semibold px-3 py-1 rounded-full mb-3 w-fit shadow-[0_0_10px_rgba(0,119,255,0.4)]">
@@ -54,7 +54,7 @@ export default function CarPage({ params }: { params: { id: string } }) {
               </span>
             )}
 
-            <h1 className="font-rajdhani font-bold text-4xl md:text-5xl text-white leading-tight mb-1">
+            <h1 className="font-rajdhani font-bold text-3xl md:text-4xl lg:text-5xl text-white leading-tight mb-1">
               {car.name}
             </h1>
             <p className="text-[#8b90a1] font-inter mb-4">{car.year}</p>
@@ -79,7 +79,7 @@ export default function CarPage({ params }: { params: { id: string } }) {
                 <p className="text-xs font-semibold uppercase tracking-wider text-[#0077FF] mb-2 font-inter">
                   Descrição
                 </p>
-                <p className="text-sm text-[#8b90a1] font-inter leading-relaxed">
+                <p className="text-sm text-[#8b90a1] font-inter leading-relaxed break-words">
                   {car.description}
                 </p>
               </div>
@@ -144,10 +144,4 @@ export default function CarPage({ params }: { params: { id: string } }) {
             </svg>
             Voltar ao catálogo
           </Link>
-        </div>
-      </div>
-
-      <Footer />
-    </main>
-  );
-}
+   
