@@ -144,4 +144,10 @@ export default function CarPage({ params }: { params: { id: string } }) {
             </svg>
             Voltar ao catálogo
           </Link>
-   
+        </div>
+      </div>
+
+      <Footer />
+    </main>
+  );
+}
