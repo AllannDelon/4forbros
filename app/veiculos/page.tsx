@@ -196,6 +196,22 @@ export default function VeiculosPage() {
                         {car.images.length} fotos
                       </span>
                     )}
+                    {car.instagramUrl && (
+                      <a
+                        href={car.instagramUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="w-7 h-7 rounded-full bg-black/60 flex items-center justify-center hover:bg-pink-500/80 transition-colors"
+                        title="Ver no Instagram"
+                      >
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                          <circle cx="12" cy="12" r="4"/>
+                          <circle cx="17.5" cy="6.5" r="0.5" fill="white" stroke="none"/>
+                        </svg>
+                      </a>
+                    )}
                   </div>
                 </Link>
 
