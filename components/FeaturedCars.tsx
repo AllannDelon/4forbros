@@ -4,32 +4,16 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Car } from "@/lib/cars";
 
-interface Filters {
-  fuel?: string;
-  transmission?: string;
-  precoMin?: string;
-  precoMax?: string;
-}
-
-function parsePrice(price: string): number {
-  return parseInt(price.replace(/\D/g, "")) || 0;
-}
-
-function applyFilters(cars: Car[], filters: Filters): Car[] {
-  return cars.filter((car) => {
-    if (filters.fuel && car.fuel !== filters.fuel) return false;
-    if (filters.transmission && car.transmission !== filters.transmission) return false;
-    const price = parsePrice(car.price);
-    if (filters.precoMin && price < parseInt(filters.precoMin)) return false;
-    if (filters.precoMax && price > parseInt(filters.precoMax)) return false;
-    return true;
-  });
-}
+const CATEGORIES = [
+  { label: "Destaque", badge: "Destaque" },
+  { label: "Oferta",   badge: "Oferta"   },
+  { label: "Exclusivo", badge: "Exclusivo" },
+];
 
 export default function FeaturedCars() {
   const [cars, setCars] = useState<Car[]>([]);
-  const [filters, setFilters] = useState<Filters>({});
   const [loading, setLoading] = useState(true);
+  const [activeCategory, setActiveCategory] = useState("Destaque");
 
   useEffect(() => {
     fetch("/api/cars")
@@ -38,22 +22,14 @@ export default function FeaturedCars() {
       .catch(() => setLoading(false));
   }, []);
 
-  useEffect(() => {
-    const handler = (e: Event) => {
-      setFilters((e as CustomEvent).detail || {});
-    };
-    window.addEventListener("filterCars", handler);
-    return () => window.removeEventListener("filterCars", handler);
-  }, []);
-
-  const filtered = applyFilters(cars, filters);
-  const hasFilters = Object.values(filters).some(Boolean);
+  const filtered = cars.filter((c) => c.badge === activeCategory).slice(0, 6);
 
   return (
     <section id="veiculos" className="py-20 bg-[#0D1117]">
       <div className="max-w-7xl mx-auto px-6 lg:px-16">
+
         {/* Header */}
-        <div className="flex items-end justify-between mb-12">
+        <div className="flex items-end justify-between mb-8">
           <div>
             <span className="blue-line mb-4 block" />
             <p className="text-xs font-inter font-semibold uppercase tracking-widest text-[#0077FF] mb-2">
@@ -62,25 +38,33 @@ export default function FeaturedCars() {
             <h2 className="font-rajdhani font-bold text-4xl md:text-5xl text-white">
               Veículos em Destaque
             </h2>
-            {hasFilters && (
-              <p className="text-sm text-[#8b90a1] font-inter mt-1">
-                {filtered.length} resultado{filtered.length !== 1 ? "s" : ""} encontrado{filtered.length !== 1 ? "s" : ""}
-              </p>
-            )}
           </div>
-          <div className="hidden md:flex items-center gap-2">
-            {hasFilters && (
-              <button onClick={() => setFilters({})} className="btn-ghost px-4 py-2.5 rounded-lg text-sm">
-                Limpar filtros
-              </button>
-            )}
-            <Link href="/veiculos" className="flex btn-ghost px-5 py-2.5 rounded-lg text-sm items-center gap-2">
-              Ver todos
-              <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </Link>
-          </div>
+          <Link
+            href="/veiculos"
+            className="hidden md:flex btn-ghost px-5 py-2.5 rounded-lg text-sm items-center gap-2"
+          >
+            Ver todos
+            <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </Link>
+        </div>
+
+        {/* Category tabs */}
+        <div className="flex gap-2 mb-8 flex-wrap">
+          {CATEGORIES.map(({ label, badge }) => (
+            <button
+              key={badge}
+              onClick={() => setActiveCategory(badge)}
+              className={`px-5 py-2 rounded-lg text-sm font-inter font-semibold transition-all ${
+                activeCategory === badge
+                  ? "bg-[#0077FF] text-white shadow-[0_0_16px_rgba(0,119,255,0.35)]"
+                  : "bg-[#1A1F26] text-[#8b90a1] hover:text-white border border-white/5 hover:border-white/10"
+              }`}
+            >
+              {label}
+            </button>
+          ))}
         </div>
 
         {/* Loading skeleton */}
@@ -106,16 +90,14 @@ export default function FeaturedCars() {
         {!loading && filtered.length === 0 && (
           <div className="glass-card rounded-2xl p-16 text-center">
             <p className="font-rajdhani font-bold text-xl text-white mb-2">
-              {hasFilters ? "Nenhum veículo com esses filtros" : "Nenhum veículo disponível"}
+              Nenhum veículo em {activeCategory}
             </p>
             <p className="text-sm text-[#8b90a1] font-inter mb-4">
-              {hasFilters ? "Tente outros filtros ou veja todos os veículos." : "Em breve novos veículos estarão disponíveis."}
+              Em breve novos veículos estarão disponíveis nessa categoria.
             </p>
-            {hasFilters && (
-              <button onClick={() => setFilters({})} className="btn-primary px-5 py-2.5 rounded-xl text-sm">
-                Ver todos
-              </button>
-            )}
+            <Link href="/veiculos" className="btn-primary px-5 py-2.5 rounded-xl text-sm inline-block">
+              Ver catálogo completo
+            </Link>
           </div>
         )}
 
@@ -230,14 +212,13 @@ export default function FeaturedCars() {
           </div>
         )}
 
-        {/* Mobile limpar filtros */}
-        {!loading && hasFilters && (
-          <div className="mt-8 flex justify-center md:hidden">
-            <button onClick={() => setFilters({})} className="btn-ghost px-6 py-2.5 rounded-lg text-sm">
-              Limpar filtros
-            </button>
-          </div>
-        )}
+        {/* Mobile — ver todos */}
+        <div className="mt-8 flex justify-center md:hidden">
+          <Link href="/veiculos" className="btn-ghost px-6 py-2.5 rounded-lg text-sm">
+            Ver todos os veículos
+          </Link>
+        </div>
+
       </div>
     </section>
   );
