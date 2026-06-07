@@ -20,8 +20,59 @@ export const viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "4forBros | Encontre seu próximo veículo",
-  description: "A melhor plataforma para comprar e vender veículos premium com confiança.",
+  metadataBase: new URL("https://www.4forbros.com.br"),
+  title: {
+    default: "4forBros | Veículos Exclusivos e Esportivos em Manaus",
+    template: "%s | 4forBros",
+  },
+  description:
+    "A 4forBros é referência em veículos exclusivos, esportivos e blindados em Manaus. Encontre seu próximo carro com segurança e confiança.",
+  keywords: [
+    "veículos exclusivos Manaus",
+    "carros esportivos Manaus",
+    "carros blindados Manaus",
+    "4forbros",
+    "comprar carro Manaus",
+    "concessionária Manaus",
+    "carros premium Manaus",
+  ],
+  authors: [{ name: "4forBros" }],
+  creator: "4forBros",
+  openGraph: {
+    type: "website",
+    locale: "pt_BR",
+    url: "https://www.4forbros.com.br",
+    siteName: "4forBros",
+    title: "4forBros | Veículos Exclusivos e Esportivos em Manaus",
+    description:
+      "Referência em veículos exclusivos, esportivos e blindados em Manaus. Encontre seu próximo carro com a 4forBros.",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "4forBros - Veículos Exclusivos",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "4forBros | Veículos Exclusivos e Esportivos em Manaus",
+    description: "Referência em veículos exclusivos, esportivos e blindados em Manaus.",
+    images: ["/og-image.jpg"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+    },
+  },
+  alternates: {
+    canonical: "https://www.4forbros.com.br",
+  },
 };
 
 export default function RootLayout({

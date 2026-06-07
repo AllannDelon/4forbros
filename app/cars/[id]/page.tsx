@@ -4,6 +4,44 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import CarGallery from "@/components/CarGallery";
+import type { Metadata } from "next";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { id: string };
+}): Promise<Metadata> {
+  const cars = getCars();
+  const car = cars.find((c) => c.id === params.id);
+  if (!car) return {};
+
+  const title = `${car.name} ${car.year}`;
+  const description =
+    car.description ||
+    `${car.name} ${car.year} — ${car.price}${car.km ? `, ${car.km} rodados` : ""}. ${car.transmission}, ${car.fuel}. Disponível na 4forBros em Manaus.`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title: `${title} | 4forBros`,
+      description,
+      url: `https://www.4forbros.com.br/cars/${car.id}`,
+      images: car.images[0]
+        ? [{ url: car.images[0], width: 1200, height: 800, alt: car.name }]
+        : [],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${title} | 4forBros`,
+      description,
+      images: car.images[0] ? [car.images[0]] : [],
+    },
+    alternates: {
+      canonical: `https://www.4forbros.com.br/cars/${car.id}`,
+    },
+  };
+}
 
 export default function CarPage({ params }: { params: { id: string } }) {
   const cars = getCars();
