@@ -29,6 +29,8 @@ export default function AdminDashboard({ initialCars }: { initialCars: Car[] }) 
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
   const [toast, setToast] = useState<{ msg: string; type: "ok" | "err" } | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
+  const dragIndex = useRef<number | null>(null);
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
 
   const showToast = (msg: string, type: "ok" | "err" = "ok") => {
     setToast({ msg, type });
@@ -380,26 +382,51 @@ export default function AdminDashboard({ initialCars }: { initialCars: Car[] }) 
                   />
                 </div>
 
-                {/* Image thumbnails */}
+                {/* Image thumbnails — drag to reorder */}
                 {form.images.length > 0 && (
-                  <div className="grid grid-cols-4 gap-2 mt-1">
-                    {form.images.map((url, i) => (
-                      <div key={url} className="relative group aspect-square rounded-lg overflow-hidden bg-[#1c2026]">
-                        <Image src={url} alt={`foto ${i + 1}`} fill className="object-cover" />
-                        <button
-                          onClick={() => removeImage(url)}
-                          className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
+                  <>
+                    <div className="grid grid-cols-4 gap-2 mt-1">
+                      {form.images.map((url, i) => (
+                        <div
+                          key={url}
+                          draggable
+                          onDragStart={() => { dragIndex.current = i; }}
+                          onDragOver={(e) => { e.preventDefault(); setDragOverIndex(i); }}
+                          onDrop={(e) => {
+                            e.preventDefault();
+                            if (dragIndex.current === null || dragIndex.current === i) {
+                              setDragOverIndex(null);
+                              return;
+                            }
+                            const imgs = [...form.images];
+                            const [moved] = imgs.splice(dragIndex.current, 1);
+                            imgs.splice(i, 0, moved);
+                            setForm((f) => ({ ...f, images: imgs }));
+                            dragIndex.current = null;
+                            setDragOverIndex(null);
+                          }}
+                          onDragEnd={() => { dragIndex.current = null; setDragOverIndex(null); }}
+                          className={`relative group aspect-square rounded-lg overflow-hidden bg-[#1c2026] cursor-grab active:cursor-grabbing transition-all duration-150 select-none ${
+                            dragOverIndex === i ? "ring-2 ring-[#0077FF] scale-105 opacity-80" : ""
+                          }`}
                         >
-                          <svg width="20" height="20" fill="none" stroke="#f87171" strokeWidth="2" viewBox="0 0 24 24">
-                            <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" strokeLinecap="round" strokeLinejoin="round"/>
-                          </svg>
-                        </button>
-                        {i === 0 && (
-                          <span className="absolute bottom-1 left-1 bg-[#0077FF] text-white text-[10px] px-1.5 py-0.5 rounded font-inter">capa</span>
-                        )}
-                      </div>
-                    ))}
-                  </div>
+                          <Image src={url} alt={`foto ${i + 1}`} fill className="object-cover pointer-events-none" />
+                          <button
+                            onClick={() => removeImage(url)}
+                            className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
+                          >
+                            <svg width="20" height="20" fill="none" stroke="#f87171" strokeWidth="2" viewBox="0 0 24 24">
+                              <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                          </button>
+                          {i === 0 && (
+                            <span className="absolute bottom-1 left-1 bg-[#0077FF] text-white text-[10px] px-1.5 py-0.5 rounded font-inter">capa</span>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                    <p className="text-xs text-[#414755] font-inter">Arraste para reordenar · 1ª foto = capa</p>
+                  </>
                 )}
               </div>
 
