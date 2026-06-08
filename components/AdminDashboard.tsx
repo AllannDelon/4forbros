@@ -122,6 +122,21 @@ export default function AdminDashboard({ initialCars }: { initialCars: Car[] }) 
     }
   };
 
+  const handleSpotlight = async (id: string) => {
+    const res = await fetch("/api/cars/spotlight", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id }),
+    });
+    if (res.ok) {
+      const { spotlight } = await res.json();
+      setCars((c) => c.map((x) => ({ ...x, spotlight: spotlight === x.id })));
+      showToast(spotlight ? "Destaque definido!" : "Destaque removido!");
+    } else {
+      showToast("Erro ao definir destaque", "err");
+    }
+  };
+
   const handleLogout = async () => {
     await fetch("/api/auth", { method: "DELETE" });
     router.push("/admin/login");
@@ -210,7 +225,13 @@ export default function AdminDashboard({ initialCars }: { initialCars: Car[] }) 
                       </svg>
                     </div>
                   )}
-                  {car.badge && (
+                  {car.spotlight && (
+                    <span className="absolute top-2 left-2 bg-yellow-500 text-black text-xs font-semibold px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                      Destaque
+                    </span>
+                  )}
+                  {!car.spotlight && car.badge && (
                     <span className="absolute top-2 left-2 bg-[#0077FF] text-white text-xs font-semibold px-2.5 py-0.5 rounded-full">
                       {car.badge}
                     </span>
@@ -233,6 +254,20 @@ export default function AdminDashboard({ initialCars }: { initialCars: Car[] }) 
 
                   {/* Actions */}
                   <div className="flex gap-2">
+                    <button
+                      onClick={() => handleSpotlight(car.id)}
+                      title={car.spotlight ? "Remover destaque" : "Definir como destaque da semana"}
+                      className={`px-3 py-2 rounded-lg flex items-center gap-1.5 transition-colors text-xs font-inter font-semibold ${
+                        car.spotlight
+                          ? "bg-yellow-500/20 text-yellow-400 hover:bg-yellow-500/30"
+                          : "bg-[#2A3038] hover:bg-[#31353c] text-[#8b90a1] hover:text-yellow-400"
+                      }`}
+                    >
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill={car.spotlight ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                      {car.spotlight ? "Destaque" : "Destacar"}
+                    </button>
                     <button
                       onClick={() => openEdit(car)}
                       className="flex-1 bg-[#2A3038] hover:bg-[#31353c] text-[#dfe2eb] text-xs font-inter font-semibold py-2 rounded-lg flex items-center justify-center gap-1.5 transition-colors"

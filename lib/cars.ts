@@ -14,6 +14,7 @@ export type Car = {
   badge: string | null;
   images: string[];
   instagramUrl?: string;
+  spotlight?: boolean;
 };
 
 const DATA_FILE = path.join(process.cwd(), "data", "cars.json");
