@@ -22,7 +22,9 @@ export default function FeaturedCars() {
       .catch(() => setLoading(false));
   }, []);
 
-  const filtered = cars.filter((c) => c.badge === activeCategory).slice(0, 6);
+  const byCategory = cars.filter((c) => c.badge === activeCategory);
+  // Se a aba ativa não tem carros, mostra todos os disponíveis (máx 6)
+  const filtered = (byCategory.length > 0 ? byCategory : cars).slice(0, 6);
 
   return (
     <section id="veiculos" className="py-20 bg-[#0D1117]">

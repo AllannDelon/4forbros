@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Rajdhani } from "next/font/google";
 import "./globals.css";
+import WhatsAppButton from "@/components/WhatsAppButton";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -75,12 +76,55 @@ export const metadata: Metadata = {
   },
 };
 
+const schemaOrg = {
+  "@context": "https://schema.org",
+  "@type": "AutoDealer",
+  name: "4forBros",
+  description:
+    "Referência em veículos exclusivos, esportivos e blindados em Manaus. Transparência, qualidade e atendimento personalizado.",
+  url: "https://www.4forbros.com.br",
+  telephone: "+55-92-98229-1000",
+  email: "contato@4forbros.com.br",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Manaus",
+    addressRegion: "AM",
+    addressCountry: "BR",
+  },
+  areaServed: { "@type": "City", name: "Manaus" },
+  priceRange: "$$$$",
+  openingHoursSpecification: [
+    {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: ["Monday","Tuesday","Wednesday","Thursday","Friday"],
+      opens: "09:00",
+      closes: "18:00",
+    },
+    {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: "Saturday",
+      opens: "09:00",
+      closes: "13:00",
+    },
+  ],
+  sameAs: [],
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="pt-BR" className={`${inter.variable} ${rajdhani.variable}`}>
-      <body>{children}</body>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaOrg) }}
+        />
+      </head>
+      <body>
+        {children}
+        <WhatsAppButton />
+      </body>
     </html>
   );
 }

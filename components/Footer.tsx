@@ -36,10 +36,15 @@ export default function Footer() {
           <div>
             <h4 className="font-inter font-semibold text-sm text-white uppercase tracking-wider mb-4">Navegação</h4>
             <ul className="flex flex-col gap-3">
-              {["Veículos", "Sobre nós", "Contato", "Vender meu carro"].map((l) => (
-                <li key={l}>
-                  <a href="#" className="font-inter text-sm text-[#8b90a1] hover:text-white transition-colors">
-                    {l}
+              {[
+                { label: "Veículos", href: "/veiculos" },
+                { label: "Sobre nós", href: "/#sobre" },
+                { label: "Contato", href: "/#contato" },
+                { label: "Vender meu carro", href: "/#contato" },
+              ].map(({ label, href }) => (
+                <li key={label}>
+                  <a href={href} className="font-inter text-sm text-[#8b90a1] hover:text-white transition-colors">
+                    {label}
                   </a>
                 </li>
               ))}

@@ -48,6 +48,16 @@ export default function CarPage({ params }: { params: { id: string } }) {
   const car = cars.find((c) => c.id === params.id);
   if (!car) notFound();
 
+  // Carros similares: mesmo badge ou mesmo combustível, excluindo o atual, máx 3
+  const similar = cars
+    .filter((c) => c.id !== car.id)
+    .sort((a, b) => {
+      const scoreA = (a.badge === car.badge ? 2 : 0) + (a.fuel === car.fuel ? 1 : 0);
+      const scoreB = (b.badge === car.badge ? 2 : 0) + (b.fuel === car.fuel ? 1 : 0);
+      return scoreB - scoreA;
+    })
+    .slice(0, 3);
+
   const waInteresse = `https://wa.me/5592982291000?text=${encodeURIComponent(
     `Olá! Tenho interesse no ${car.name} ${car.year} (${car.price}). Pode me passar mais informações?`
   )}`;
@@ -174,7 +184,7 @@ export default function CarPage({ params }: { params: { id: string } }) {
         {/* Back button */}
         <div className="mt-12">
           <Link
-            href="/#veiculos"
+            href="/veiculos"
             className="inline-flex items-center gap-2 text-sm text-[#8b90a1] hover:text-white font-inter transition-colors"
           >
             <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -183,6 +193,68 @@ export default function CarPage({ params }: { params: { id: string } }) {
             Voltar ao catálogo
           </Link>
         </div>
+
+        {/* Carros similares */}
+        {similar.length > 0 && (
+          <div className="mt-20">
+            <div className="mb-8">
+              <span className="blue-line mb-4 block" />
+              <p className="text-xs font-inter font-semibold uppercase tracking-widest text-[#0077FF] mb-2">
+                Você também pode gostar
+              </p>
+              <h2 className="font-rajdhani font-bold text-3xl md:text-4xl text-white">
+                Veículos similares
+              </h2>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {similar.map((s) => (
+                <Link
+                  key={s.id}
+                  href={`/cars/${s.id}`}
+                  className="glass-card rounded-2xl overflow-hidden group flex flex-col hover:border-[#0077FF]/30 border border-transparent transition-all duration-300"
+                >
+                  <div className="relative h-48 bg-[#1c2026] overflow-hidden">
+                    {s.images[0] ? (
+                      <Image
+                        src={s.images[0]}
+                        alt={s.name}
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                    ) : (
+                      <div className="flex items-center justify-center h-full text-[#414755]">
+                        <svg width="40" height="40" fill="none" stroke="currentColor" strokeWidth="1" viewBox="0 0 24 24">
+                          <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/>
+                        </svg>
+                      </div>
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#1A1F26] via-transparent to-transparent" />
+                    {s.badge && (
+                      <span className="absolute top-3 left-3 bg-[#0077FF] text-white text-xs font-semibold px-3 py-1 rounded-full">
+                        {s.badge}
+                      </span>
+                    )}
+                  </div>
+                  <div className="p-4 flex flex-col flex-1">
+                    <div className="flex items-start justify-between mb-1">
+                      <h3 className="font-rajdhani font-bold text-lg text-white leading-tight">{s.name}</h3>
+                      <span className="font-rajdhani font-bold text-lg text-[#0077FF] ml-2 whitespace-nowrap">{s.price}</span>
+                    </div>
+                    <p className="text-xs text-[#8b90a1] font-inter mb-3">
+                      {s.year}{s.km ? ` · ${s.km}` : ""}{s.transmission ? ` · ${s.transmission}` : ""}
+                    </p>
+                    <span className="mt-auto text-xs font-inter text-[#0077FF] flex items-center gap-1 group-hover:gap-2 transition-all">
+                      Ver detalhes
+                      <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                        <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       <Footer />
