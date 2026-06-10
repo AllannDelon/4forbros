@@ -28,7 +28,7 @@ const faqs = [
   },
 ];
 
-const schemaFAQ = {
+export const faqSchema = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
   mainEntity: faqs.map(({ q, a }) => ({
@@ -43,10 +43,6 @@ export default function FAQ() {
 
   return (
     <section id="faq" className="py-20 bg-[#0D1117]">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaFAQ) }}
-      />
 
       <div className="max-w-7xl mx-auto px-6 lg:px-16">
         <div className="grid lg:grid-cols-[1fr,2fr] gap-12 lg:gap-20 items-start">
