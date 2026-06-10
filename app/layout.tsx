@@ -107,7 +107,7 @@ const schemaOrg = {
       closes: "13:00",
     },
   ],
-  sameAs: [],
+  sameAs: ["https://www.instagram.com/4forbros"],
 };
 
 export default function RootLayout({

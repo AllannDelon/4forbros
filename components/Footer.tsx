@@ -20,7 +20,9 @@ export default function Footer() {
               ].map(({ label, path }) => (
                 <a
                   key={label}
-                  href="#"
+                  href={label === "Instagram" ? "https://www.instagram.com/4forbros" : "#"}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   aria-label={label}
                   className="w-9 h-9 glass-card rounded-lg flex items-center justify-center hover:border-[#0077FF]/40 hover:text-[#0077FF] transition-colors"
                 >
