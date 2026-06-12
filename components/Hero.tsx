@@ -43,10 +43,7 @@ function SpotlightCard({ car }: { car: Car }) {
           </div>
         )}
 
-        {/* Gradiente base — sempre visível para legibilidade do nome */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
-
-        {/* Gradiente extra que aparece no hover/tap */}
+        {/* Gradiente — aparece no hover/tap */}
         <div className={`absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent transition-opacity duration-300
           ${revealed ? "opacity-100" : "opacity-0 md:opacity-0 md:group-hover:opacity-100"}`} />
 
@@ -67,35 +64,30 @@ function SpotlightCard({ car }: { car: Car }) {
           </div>
         </div>
 
-        {/* Info overlay */}
-        <div className="absolute bottom-0 left-0 right-0 p-5">
-          {/* Nome — sempre visível */}
+        {/* Info overlay — tudo aparece no hover (desktop) ou tap (mobile) */}
+        <div className={`absolute bottom-0 left-0 right-0 p-5 transition-all duration-300
+          ${revealed
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 translate-y-3 md:opacity-0 md:translate-y-3 md:group-hover:opacity-100 md:group-hover:translate-y-0"
+          }`}>
           <h3 className="font-rajdhani font-bold text-2xl lg:text-3xl text-white leading-tight mb-0.5 drop-shadow-lg">
             {car.name}
           </h3>
-
-          {/* Detalhes — aparecem no hover (desktop) ou tap (mobile) */}
-          <div className={`transition-all duration-300
-            ${revealed
-              ? "opacity-100 translate-y-0"
-              : "opacity-0 translate-y-3 md:opacity-0 md:translate-y-3 md:group-hover:opacity-100 md:group-hover:translate-y-0"
-            }`}>
-            <p className="text-sm text-[#aeb3c0] font-inter mb-4 mt-0.5">
-              {car.year}
-              {car.km ? ` · ${car.km}` : ""}
-              {car.transmission ? ` · ${car.transmission}` : ""}
-            </p>
-            <div className="flex items-center justify-between gap-3">
-              <span className="font-rajdhani font-bold text-3xl text-[#0077FF]">
-                {car.price}
-              </span>
-              <span className="flex items-center gap-1.5 text-sm bg-[#0077FF] text-white px-4 py-2.5 rounded-xl font-inter font-semibold shadow-[0_0_20px_rgba(0,119,255,0.4)] whitespace-nowrap">
-                Ver detalhes
-                <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                  <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </span>
-            </div>
+          <p className="text-sm text-[#aeb3c0] font-inter mb-4 mt-0.5">
+            {car.year}
+            {car.km ? ` · ${car.km}` : ""}
+            {car.transmission ? ` · ${car.transmission}` : ""}
+          </p>
+          <div className="flex items-center justify-between gap-3">
+            <span className="font-rajdhani font-bold text-3xl text-[#0077FF]">
+              {car.price}
+            </span>
+            <span className="flex items-center gap-1.5 text-sm bg-[#0077FF] text-white px-4 py-2.5 rounded-xl font-inter font-semibold shadow-[0_0_20px_rgba(0,119,255,0.4)] whitespace-nowrap">
+              Ver detalhes
+              <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </span>
           </div>
         </div>
       </div>
